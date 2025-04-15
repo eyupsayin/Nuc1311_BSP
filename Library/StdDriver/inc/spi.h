@@ -12,6 +12,8 @@
 #ifndef __SPI_H__
 #define __SPI_H__
 
+#include "NUC1311.h"
+
 #ifdef __cplusplus
 extern "C"
 {
