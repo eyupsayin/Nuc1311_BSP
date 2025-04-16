@@ -864,6 +864,37 @@ int32_t CAN_SetRxMsg(CAN_T *tCAN, uint32_t u32MsgNum , uint32_t u32IDType, uint3
 }
 
 /**
+  * @brief The function is used to configure a receive message object and mask.
+  *
+  * @param[in] tCAN The pointer to CAN module base address.
+  * @param[in] u32MsgNum Specifies the Message object number from 0 to 31.
+  * @param[in] u32IDType Specifies the identifier type of the frames that will be transmitted. Valid values are:
+  *                      - CAN_STD_ID: The 11-bit identifier.
+  *                      - CAN_EXT_ID: The 29-bit identifier.
+  * @param[in] u32ID Specifies the identifier used for acceptance filtering.
+  * @paran[in} u32IDMask The value to be used to mask the CAN ID.
+	*
+  * @retval FALSE No useful interface.
+  * @retval TRUE Configure a receive message object success.
+  *
+  * @details If the RxIE bit (CAN_IFn_MCON[10]) is set, the IntPnd bit (CAN_IFn_MCON[13])
+  *          will be set when a received Data Frame is accepted and stored in the Message Object.
+  */
+int32_t CAN_SetRxMsgAndMsk(CAN_T *tCAN, uint32_t u32MsgNum , uint32_t u32IDType, uint32_t u32ID, uint32_t u32IDMask)
+{
+		uint32_t u32TimeOutCount = 0;
+
+    while(CAN_SetRxMsgObjAndMsk(tCAN, u32MsgNum, u32IDType, u32ID, u32IDMask, TRUE) == FALSE)
+    {
+        u32TimeOutCount++;
+
+        if(u32TimeOutCount >= 0x10000000) return FALSE;
+    }
+
+    return TRUE;
+}
+
+/**
   * @brief The function is used to configure several receive message objects.
   *
   * @param[in] tCAN The pointer to CAN module base address.
